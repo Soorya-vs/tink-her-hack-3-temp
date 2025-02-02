@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievements - Habit Hero</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><button onclick="logout()">Logout</button></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h2>🏅 Your Achievements</h2>
+
+        <!-- Achievement List -->
+        <ul id="achievementList"></ul>
+    </div>
+
+    <script>
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        auth.onAuthStateChanged(userCredential => {
+            if (userCredential) {
+                let userId = userCredential.uid;
+                db.collection("users").doc(userId).get().then(doc => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        displayAchievements(userData);
+                    }
+                });
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        // Display Achievements
+        function displayAchievements(userData) {
+            const achievementList = document.getElementById("achievementList");
+            achievementList.innerHTML = "";
+
+            // Example achievements
+            if (userData.xp >= 100) {
+                achievementList.innerHTML += "<li>🎉 100 XP Earned</li>";
+            }
+            if (userData.level >= 5) {
+                achievementList.innerHTML += "<li>🏅 Reached Level 5</li>";
+            }
+            if (userData.habits.length >= 10) {
+                achievementList.innerHTML += "<li>🏆 Completed 10 Habits</li>";
+            }
+        }
+
+        // Logout functionality
+        function logout() {
+            auth.signOut().then(() => {
+                window.location.href = "login.html"; // Redirect to login page
+            });
+        }
+    </script>
+</body>
+</html>

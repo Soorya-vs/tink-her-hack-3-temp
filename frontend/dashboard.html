@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Hero - Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><button onclick="logout()">Logout</button></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h2>🚀 Habit Hero Dashboard</h2>
+
+        <!-- User Info -->
+        <div class="user-info">
+            <p id="xpDisplay">XP: 0</p>
+            <p id="levelDisplay">Level: 1</p>
+        </div>
+
+        <!-- Add Habit -->
+        <div class="add-habit">
+            <input type="text" id="habitInput" placeholder="Enter a new habit">
+            <button id="addHabitBtn">Add Habit</button>
+        </div>
+
+        <!-- Habit List -->
+        <ul id="habitList">
+            <!-- List items will be added dynamically -->
+        </ul>
+    </div>
+
+    <script>
+        // Dummy JavaScript (you can replace this with Firebase or other logic)
+        let habits = [];
+        let xp = 0;
+        let level = 1;
+
+        document.getElementById("addHabitBtn").addEventListener("click", () => {
+            let habitName = document.getElementById("habitInput").value.trim();
+            if (habitName !== "") {
+                habits.push({ name: habitName, completed: false });
+                document.getElementById("habitInput").value = "";
+                updateHabitList();
+            }
+        });
+
+        function updateHabitList() {
+            let habitList = document.getElementById("habitList");
+            habitList.innerHTML = "";
+            habits.forEach((habit, index) => {
+                let li = document.createElement("li");
+                li.innerHTML = `${habit.name} ${habit.completed ? "✔️" : `<button onclick="completeHabit(${index})">Complete</button>`}`;
+                habitList.appendChild(li);
+            });
+            document.getElementById("xpDisplay").innerText = `XP: ${xp}`;
+            document.getElementById("levelDisplay").innerText = `Level: ${level}`;
+        }
+
+        function completeHabit(index) {
+            if (!habits[index].completed) {
+                habits[index].completed = true;
+                xp += 10;
+                if (xp >= level * 50) {
+                    level++;
+                    alert(`Level Up! Now you're Level ${level}`);
+                }
+                updateHabitList();
+            }
+        }
+
+        function logout() {
+            alert("Logging out...");
+            // Add logout logic here (Firebase or other)
+        }
+    </script>
+
+</body>
+</html>

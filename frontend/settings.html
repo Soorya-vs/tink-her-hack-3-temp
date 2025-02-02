@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Habit Hero</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><button onclick="logout()">Logout</button></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h2>⚙️ Settings</h2>
+
+        <!-- Change Username -->
+        <div>
+            <label for="username">Change Username</label>
+            <input type="text" id="username" placeholder="Enter new username">
+            <button onclick="updateUsername()">Save</button>
+        </div>
+
+        <!-- Change Password -->
+        <div>
+            <label for="password">Change Password</label>
+            <input type="password" id="password" placeholder="Enter new password">
+            <button onclick="updatePassword()">Save</button>
+        </div>
+
+        <!-- Notifications -->
+        <div>
+            <label for="notifications">Enable Notifications</label>
+            <input type="checkbox" id="notifications" checked>
+        </div>
+
+        <!-- Language Settings -->
+        <div>
+            <label for="language">Language</label>
+            <select id="language">
+                <option value="en">English</option>
+                <option value="es">Spanish</option>
+                <option value="fr">French</option>
+            </select>
+        </div>
+    </div>
+
+    <script>
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Update Username
+        function updateUsername() {
+            const username = document.getElementById("username").value;
+            if (username) {
+                let userId = auth.currentUser?.uid;
+                if (userId) {
+                    db.collection("users").doc(userId).update({
+                        name: username
+                    }).then(() => {
+                        alert("Username updated successfully!");
+                    });
+                }
+            }
+        }
+
+        // Update Password
+        function updatePassword() {
+            const password = document.getElementById("password").value;
+            if (password) {
+                auth.currentUser.updatePassword(password).then(() => {
+                    alert("Password updated successfully!");
+                }).catch(error => {
+                    console.error("Error updating password: ", error);
+                });
+            }
+        }
+
+        // Logout functionality
+        function logout() {
+            auth.signOut().then(() => {
+                window.location.href = "login.html"; // Redirect to login page
+            });
+        }
+    </script>
+</body>
+</html>

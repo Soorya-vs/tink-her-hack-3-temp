@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Hero - Login</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h2>🚀 Welcome to Habit Hero</h2>
+            <p class="subtitle">Build strong habits & level up your life!</p>
+
+            <!-- Login Form -->
+            <div id="loginForm">
+                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button class="btn" onclick="login()">Login</button>
+                <p>Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
+            </div>
+
+            <!-- Registration Form -->
+            <div id="registerForm" style="display: none;">
+                <input type="email" id="registerEmail" placeholder="Email" required>
+                <input type="password" id="registerPassword" placeholder="Password" required>
+                <button class="btn" onclick="register()">Register</button>
+                <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+            </div>
+            
+            <p id="errorMessage"></p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+      
+        // Firebase Configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyCDFtISEprjNtK3ndtlOZjaLPB_rgTWrY8",
+          authDomain: "habit-hero-f8094.firebaseapp.com",
+          projectId: "habit-hero-f8094",
+          storageBucket: "habit-hero-f8094.firebaseapp.com",
+          messagingSenderId: "265677115923",
+          appId: "1:265677115923:web:e2c0278112136f6ab0a5e6",
+          measurementId: "G-V2QG47FDMS"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+      
+        // User Login
+        window.login = function() {
+          const email = document.getElementById("loginEmail").value;
+          const password = document.getElementById("loginPassword").value;
+      
+          signInWithEmailAndPassword(auth, email, password)
+            .then(() => {
+              window.location.href = "dashboard.html";
+            })
+            .catch(error => {
+              document.getElementById("errorMessage").innerText = error.message;
+            });
+        };
+      
+        // User Registration
+        window.register = function() {
+          const email = document.getElementById("registerEmail").value;
+          const password = document.getElementById("registerPassword").value;
+      
+          createUserWithEmailAndPassword(auth, email, password)
+            .then(() => {
+              window.location.href = "dashboard.html";
+            })
+            .catch(error => {
+              document.getElementById("errorMessage").innerText = error.message;
+            });
+        };
+      
+        // Toggle Forms
+        window.showRegister = function() {
+          document.getElementById("loginForm").style.display = "none";
+          document.getElementById("registerForm").style.display = "block";
+        };
+      
+        window.showLogin = function() {
+          document.getElementById("registerForm").style.display = "none";
+          document.getElementById("loginForm").style.display = "block";
+        };
+      </script>
+      
+</body>
+</html>
